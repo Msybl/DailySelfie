@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    // Camera icon on action bar
+    <item
+        android:id="@+id/action_camera"
+        android:icon="@drawable/ic_camera_enhance_black_48dp"
+        android:title="@string/camera"
+        app:showAsAction="ifRoom"/>
+
+</menu>
