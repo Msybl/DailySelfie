@@ -4,22 +4,22 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuInflater;
-import android.view.View;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageView mImageView = null;
-
+    ArrayList<Bitmap> photoID = new ArrayList<Bitmap>();
+    ArrayList<String> photoName = new ArrayList<String>();
+    private ListView mListView;
+    private PhotoAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        mImageView = (ImageView) findViewById(R.id.myImageView);
+        mListView = (ListView) findViewById(R.id.listView);
+        listAdapter = new PhotoAdapter(MainActivity.this, photoID, photoName);
+        mListView.setAdapter(listAdapter);
 
     }
 
@@ -46,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_camera:
                 // User chose the "camera" action
                 dispatchTakePictureIntent();
-                Toast.makeText(getApplicationContext(), "camera!", Toast.LENGTH_SHORT).show();
                 return true;
 
             default:
@@ -71,8 +72,12 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
+
+            photoID.add(imageBitmap);
+            photoName.add("alper foto");
+            listAdapter.notifyDataSetChanged();
         }
     }
+
 
 }
