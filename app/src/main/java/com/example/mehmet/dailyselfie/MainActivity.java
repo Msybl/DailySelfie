@@ -2,24 +2,36 @@ package com.example.mehmet.dailyselfie;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    ArrayList<Bitmap> photoID = new ArrayList<Bitmap>();
-    ArrayList<String> photoName = new ArrayList<String>();
+
     private ListView mListView;
     private PhotoAdapter listAdapter;
+    ArrayList<Bitmap> photoID = new ArrayList<Bitmap>();
+    ArrayList<String> photoName = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             listAdapter.notifyDataSetChanged();
         }
     }
+
 
 
 }
