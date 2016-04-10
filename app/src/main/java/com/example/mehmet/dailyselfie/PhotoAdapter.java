@@ -47,7 +47,7 @@ public class PhotoAdapter extends BaseAdapter {
 
         if (convertView == null) {
 
-            convertView = mInflater.inflate(R.layout.list_view_item, null);
+            convertView = mInflater.inflate(R.layout.selfie_item, null);
             mHolder = new ViewHolder();
             mHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.imageView1);
             mHolder.tvPhotoID = (TextView) convertView.findViewById(R.id.text1);
