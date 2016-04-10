@@ -1,7 +1,6 @@
 package com.example.mehmet.dailyselfie;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +12,19 @@ import java.util.ArrayList;
 
 public class PhotoAdapter extends BaseAdapter {
     private static LayoutInflater mInflater = null;
-    ArrayList<Bitmap> photo;
+    ArrayList<SelfieItem> mSelfieItem;
     Context context;
-    ArrayList<String> photoName;
 
-    public PhotoAdapter(Context ctx, ArrayList<Bitmap> photo,
-                        ArrayList<String> photoName) {
+    public PhotoAdapter(Context ctx, ArrayList<SelfieItem> mSelfieItem) {
         context = ctx;
-        this.photo = photo;
-        this.photoName = photoName;
+        this.mSelfieItem = mSelfieItem;
         mInflater = (LayoutInflater) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return photo.size();
+        return mSelfieItem.size();
     }
 
     @Override
@@ -65,8 +61,8 @@ public class PhotoAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag();
         }
 
-        mHolder.ivPhoto.setImageBitmap(photo.get(position));
-        mHolder.tvPhotoID.setText(photoName.get(position));
+        mHolder.ivPhoto.setImageBitmap(mSelfieItem.get(position).getBitmap());
+        mHolder.tvPhotoID.setText(mSelfieItem.get(position).getDate());
 
         return convertView;
 

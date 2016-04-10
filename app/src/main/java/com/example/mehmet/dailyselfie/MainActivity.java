@@ -2,36 +2,25 @@ package com.example.mehmet.dailyselfie;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuInflater;
-import android.view.View;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-
+    ArrayList<SelfieItem> mSelfieItem = new ArrayList<SelfieItem>();
     private ListView mListView;
     private PhotoAdapter listAdapter;
-    ArrayList<Bitmap> photoID = new ArrayList<Bitmap>();
-    ArrayList<String> photoName = new ArrayList<String>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mListView = (ListView) findViewById(R.id.listView);
-        listAdapter = new PhotoAdapter(MainActivity.this, photoID, photoName);
+        listAdapter = new PhotoAdapter(MainActivity.this, mSelfieItem);
         mListView.setAdapter(listAdapter);
 
     }
@@ -85,10 +74,19 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            photoID.add(imageBitmap);
-            photoName.add("alper foto");
+            SelfieItem mSelfie = new SelfieItem(imageBitmap, getCurrentDate());
+            mSelfieItem.add(mSelfie);
+
             listAdapter.notifyDataSetChanged();
         }
+    }
+
+    private String getCurrentDate() {
+        String currentDate = "";
+        Date d = new Date(); // Initializes this Date instance to the current time.
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return currentDate = formatter.format(d);
     }
 
 
