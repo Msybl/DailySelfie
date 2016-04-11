@@ -1,6 +1,6 @@
 package com.example.mehmet.dailyselfie;
 
-import android.app.ListFragment;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,9 @@ public class SelfieListFragment extends ListFragment implements AdapterView.OnIt
     private Context mContext;
     private Uri mUri;
 
+    //static factory method is used
+    //because
+    //http://www.androiddesignpatterns.com/2012/05/using-newinstance-to-instantiate.html
     public static SelfieListFragment newInstance() {
         SelfieListFragment f = new SelfieListFragment();
         return f;
@@ -57,18 +62,9 @@ public class SelfieListFragment extends ListFragment implements AdapterView.OnIt
         mListView.setAdapter(mAdapter);
     }
 
-    public void onFragmentResult() {
-        Bitmap imageBitmap =
-                decodeSampledBitmapFromPath(mUri, 100, 100);
-
-        SelfieItem mSelfie = new SelfieItem(imageBitmap, getCurrentDate());
-        mSelfieItem.add(mSelfie);
-
-        mAdapter.notifyDataSetChanged();
-    }
-
     // Take a photo with the camera app
     public void dispatchTakePictureIntent() {
+        Log.d("alper", "dispatchTakePictureIntent");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
@@ -127,6 +123,20 @@ public class SelfieListFragment extends ListFragment implements AdapterView.OnIt
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            Bitmap imageBitmap =
+                    decodeSampledBitmapFromPath(mUri, 100, 100);
+
+            SelfieItem mSelfie = new SelfieItem(imageBitmap, getCurrentDate());
+            mSelfieItem.add(mSelfie);
+
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
