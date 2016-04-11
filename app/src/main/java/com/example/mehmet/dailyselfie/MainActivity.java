@@ -1,15 +1,18 @@
 package com.example.mehmet.dailyselfie;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SelfieListFragment.OnPhotoClickedListener {
 
     private SelfieListFragment mSelfieFrag;
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
+        transaction = getSupportFragmentManager().beginTransaction();
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -33,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
             mSelfieFrag = SelfieListFragment.newInstance();
 
             // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, mSelfieFrag).commit();
+            transaction.add(R.id.fragment_container, mSelfieFrag).commit();
         }
 
     }
@@ -63,5 +67,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPhotoClicked(SelfieItem item) {
+        PhotoFragment photoFragment = PhotoFragment.newInstance(item);
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.fragment_container, photoFragment);
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    public void onBackBtnClicked(View view) {
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.fragment_container, mSelfieFrag);
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
 
 }
