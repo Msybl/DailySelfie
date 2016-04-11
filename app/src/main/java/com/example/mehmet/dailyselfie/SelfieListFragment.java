@@ -23,9 +23,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class SelfieListFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class SelfieListFragment extends ListFragment {
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+    OnPhotoClickedListener mCallback;
     private ListView mListView;
     private PhotoAdapter mAdapter;
     private ArrayList<SelfieItem> mSelfieItem = new ArrayList<SelfieItem>();
@@ -44,6 +45,20 @@ public class SelfieListFragment extends ListFragment implements AdapterView.OnIt
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        Activity activity;
+
+        if (mContext instanceof Activity) {
+            activity = (Activity) context;
+            try {
+                mCallback = (OnPhotoClickedListener) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnPhotoClickedListener");
+            }
+        }
     }
 
     @Override
@@ -60,6 +75,14 @@ public class SelfieListFragment extends ListFragment implements AdapterView.OnIt
         mListView = getListView();
         mAdapter = new PhotoAdapter(mContext, mSelfieItem);
         mListView.setAdapter(mAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("alper", "onItemClick");
+                mCallback.onPhotoClicked(mSelfieItem.get(position));
+            }
+        });
     }
 
     // Take a photo with the camera app
@@ -138,8 +161,9 @@ public class SelfieListFragment extends ListFragment implements AdapterView.OnIt
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+    // Container Activity must implement this interface
+    public interface OnPhotoClickedListener {
+        void onPhotoClicked(SelfieItem item);
     }
+
 }
