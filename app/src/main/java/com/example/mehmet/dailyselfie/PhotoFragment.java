@@ -1,10 +1,14 @@
 package com.example.mehmet.dailyselfie;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +55,22 @@ public class PhotoFragment extends Fragment {
         // retrieve SelfieItem's Uri and Date
         Uri selfieItemUri = selfieItem.getBitmapUri();
         String selfieItemDate = selfieItem.getDate();
+
+
+        // TODO: We need to learn orientation of photo and screen dimentions
+        // So that we can fit it to screen and rotate if necessary
+
+        // Get display dimentions
+        DisplayMetrics metrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager()
+                .getDefaultDisplay()
+                .getMetrics(metrics);
+
+        Log.i("metrics", "witdh: "+metrics.widthPixels+"  height: "+metrics.heightPixels);
+
+
+
+
         // decode Bitmap from item's uri
         Bitmap selfieItemPhoto = SelfieUtility.decodeSampledBitmapFromPath(selfieItemUri,
                 TARGET_HEIGHT, TARGET_WIDTH);
@@ -60,5 +80,7 @@ public class PhotoFragment extends Fragment {
 
         return view;
     }
+
+
 
 }

@@ -1,9 +1,11 @@
 package com.example.mehmet.dailyselfie;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,15 +76,19 @@ public class MainActivity extends AppCompatActivity implements SelfieListFragmen
         // and add the transaction to the back stack so the user can navigate back
         transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, photoFragment);
-        transaction.addToBackStack(null);
 
         // Commit the transaction
         transaction.commit();
     }
 
-    //TODO : Implement below function
+    // Return to SelfieListFragment when back button is clicked
     public void onBackBtnClicked(View view) {
-
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, mSelfieFrag);
+        // We don't need to add these fragments to backstack
+        //transaction.addToBackStack(null);
+        transaction.commit();
     }
+
 
 }
