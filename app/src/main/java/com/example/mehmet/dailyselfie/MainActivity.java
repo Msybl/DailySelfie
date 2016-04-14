@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements SelfieListFragmen
     @Override
     public void onPhotoClicked(SelfieItem item) {
         PhotoFragment photoFragment = PhotoFragment.newInstance(item);
-
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
+        transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, photoFragment);
         transaction.addToBackStack(null);
 
@@ -80,14 +80,9 @@ public class MainActivity extends AppCompatActivity implements SelfieListFragmen
         transaction.commit();
     }
 
+    //TODO : Implement below function
     public void onBackBtnClicked(View view) {
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.fragment_container, mSelfieFrag);
-        transaction.addToBackStack(null);
 
-        // Commit the transaction
-        transaction.commit();
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.mehmet.dailyselfie;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,8 +13,11 @@ import android.widget.TextView;
 
 public class PhotoFragment extends Fragment {
 
+    private static final int TARGET_HEIGHT = 500;
+    private static final int TARGET_WIDTH = 500;
+
     private final static String SELFIE_ITEM = "SelfieItem";
-    private SelfieItem item;
+    private SelfieItem selfieItem;
     private ImageView ivPhoto;
     private TextView tvDate;
 
@@ -41,10 +46,17 @@ public class PhotoFragment extends Fragment {
         tvDate = (TextView) view.findViewById(R.id.tvDate);
 
         Bundle args = getArguments();
-        SelfieItem item = (SelfieItem) args.getParcelable(SELFIE_ITEM);
+        selfieItem = (SelfieItem) args.getParcelable(SELFIE_ITEM);
 
-        ivPhoto.setImageBitmap(item.getBitmap());
-        tvDate.setText(item.getDate());
+        // retrieve SelfieItem's Uri and Date
+        Uri selfieItemUri = selfieItem.getBitmapUri();
+        String selfieItemDate = selfieItem.getDate();
+        // decode Bitmap from item's uri
+        Bitmap selfieItemPhoto = SelfieUtility.decodeSampledBitmapFromPath(selfieItemUri,
+                TARGET_HEIGHT, TARGET_WIDTH);
+
+        ivPhoto.setImageBitmap(selfieItemPhoto);
+        tvDate.setText(selfieItemDate);
 
         return view;
     }

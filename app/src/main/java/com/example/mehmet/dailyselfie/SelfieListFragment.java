@@ -3,8 +3,6 @@ package com.example.mehmet.dailyselfie;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -127,34 +125,15 @@ public class SelfieListFragment extends ListFragment {
         return storageDir;
     }
 
-    private Bitmap decodeSampledBitmapFromPath(Uri uri, int targetHeight, int targetWidth) {
 
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmapOptions = new BitmapFactory.Options();
-        bmapOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(uri.getPath(), bmapOptions);
-        int origHeight = bmapOptions.outHeight;
-        int origWidth = bmapOptions.outWidth;
-
-        // Determine how much to scale down the image
-        int scale = Math.min(origHeight / targetHeight, origWidth / targetWidth);
-        // Decode the image file into a Bitmap sized to fill the View
-        bmapOptions.inJustDecodeBounds = false;
-        bmapOptions.inSampleSize = scale;
-
-        return BitmapFactory.decodeFile(uri.getPath(), bmapOptions);
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bitmap imageBitmap =
-                    decodeSampledBitmapFromPath(mUri, 100, 100);
 
-            SelfieItem mSelfie = new SelfieItem(imageBitmap, getCurrentDate());
+            SelfieItem mSelfie = new SelfieItem(mUri, getCurrentDate());
             mSelfieItem.add(mSelfie);
 
             mAdapter.notifyDataSetChanged();

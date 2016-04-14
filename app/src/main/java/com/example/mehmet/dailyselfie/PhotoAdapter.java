@@ -1,6 +1,8 @@
 package com.example.mehmet.dailyselfie;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class PhotoAdapter extends BaseAdapter {
+
+    private static final int TARGET_HEIGHT = 100;
+    private static final int TARGET_WIDTH = 100;
+
     private static LayoutInflater mInflater = null;
     ArrayList<SelfieItem> mSelfieItem;
     Context context;
@@ -61,8 +67,17 @@ public class PhotoAdapter extends BaseAdapter {
             mHolder = (ViewHolder) convertView.getTag();
         }
 
-        mHolder.ivPhoto.setImageBitmap(mSelfieItem.get(position).getBitmap());
-        mHolder.tvPhotoID.setText(mSelfieItem.get(position).getDate());
+        // retrieve SelfieItem at position
+        SelfieItem selfieItem = mSelfieItem.get(position);
+        // retrieve SelfieItem's Uri and Date
+        Uri selfieItemUri = selfieItem.getBitmapUri();
+        String selfieItemDate = selfieItem.getDate();
+        // decode Bitmap from item's uri
+        Bitmap selfieItemPhoto = SelfieUtility.decodeSampledBitmapFromPath(selfieItemUri,
+                TARGET_HEIGHT, TARGET_WIDTH);
+        // update UI
+        mHolder.ivPhoto.setImageBitmap(selfieItemPhoto);
+        mHolder.tvPhotoID.setText(selfieItemDate);
 
         return convertView;
 

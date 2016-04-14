@@ -1,6 +1,7 @@
 package com.example.mehmet.dailyselfie;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,25 +25,26 @@ public class SelfieItem implements Parcelable {
             return new SelfieItem[size];
         }
     };
-    Bitmap mBitmap;
+
+    Uri mBitmapUri;
     String mDate;
 
-    public SelfieItem(Bitmap mBitmap, String mDate) {
-        this.mBitmap = mBitmap;
+    public SelfieItem(Uri mBitmapUri, String mDate) {
+        this.mBitmapUri = mBitmapUri;
         this.mDate = mDate;
     }
 
     protected SelfieItem(Parcel in) {
-        mBitmap = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
+        mBitmapUri = (Uri) in.readValue(Bitmap.class.getClassLoader());
         mDate = in.readString();
     }
 
-    public Bitmap getBitmap() {
-        return mBitmap;
+    public Uri getBitmapUri() {
+        return mBitmapUri;
     }
 
-    public void setBitmap(Bitmap mBitmap) {
-        this.mBitmap = mBitmap;
+    public void setBitmapUri(Uri mBitmapUri) {
+        this.mBitmapUri = mBitmapUri;
     }
 
     public String getDate() {
@@ -60,7 +62,7 @@ public class SelfieItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(mBitmap);
+        dest.writeValue(mBitmapUri);
         dest.writeString(mDate);
     }
 }
