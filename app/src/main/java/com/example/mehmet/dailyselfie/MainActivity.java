@@ -1,25 +1,20 @@
 package com.example.mehmet.dailyselfie;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuInflater;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SelfieListFragment.OnPhotoClickedListener {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageView mImageView = null;
-
+    private SelfieListFragment mSelfieFrag;
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +23,25 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        mImageView = (ImageView) findViewById(R.id.myImageView);
+        transaction = getSupportFragmentManager().beginTransaction();
+
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.fragment_container) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            mSelfieFrag = SelfieListFragment.newInstance();
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            transaction.add(R.id.fragment_container, mSelfieFrag).commit();
+        }
 
     }
 
@@ -45,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_camera:
                 // User chose the "camera" action
-                dispatchTakePictureIntent();
-                Toast.makeText(getApplicationContext(), "camera!", Toast.LENGTH_SHORT).show();
+                mSelfieFrag.dispatchTakePictureIntent();
                 return true;
 
             default:
@@ -57,22 +69,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Take a photo with the camera app
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
+    @Override
+    public void onPhotoClicked(SelfieItem item) {
+        PhotoFragment photoFragment = PhotoFragment.newInstance(item);
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, photoFragment);
+
+        // Commit the transaction
+        transaction.commit();
     }
 
-    //Get the thumbnail
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
-        }
+    // Return to SelfieListFragment when back button is clicked
+    public void onBackBtnClicked(View view) {
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, mSelfieFrag);
+        // We don't need to add these fragments to backstack
+        //transaction.addToBackStack(null);
+        transaction.commit();
     }
+
 
 }
