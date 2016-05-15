@@ -3,6 +3,7 @@ package com.example.mehmet.dailyselfie;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,10 +74,8 @@ public class PhotoAdapter extends BaseAdapter {
         Uri selfieItemUri = selfieItem.getBitmapUri();
         String selfieItemDate = selfieItem.getDate();
         // decode Bitmap from item's uri
-        Bitmap selfieItemPhoto = SelfieUtility.decodeSampledBitmapFromPath(selfieItemUri,
-                TARGET_HEIGHT, TARGET_WIDTH);
-        // update UI
-        mHolder.ivPhoto.setImageBitmap(selfieItemPhoto);
+        loadBitmap(selfieItemUri, mHolder.ivPhoto);
+
         mHolder.tvPhotoID.setText(selfieItemDate);
 
         return convertView;
@@ -87,4 +86,11 @@ public class PhotoAdapter extends BaseAdapter {
         TextView tvPhotoID;
         ImageView ivPhoto;
     }
+
+    public void loadBitmap(Uri uri, ImageView imageView)
+    {
+        AsyncSelfieTask asyncSelfieTask = new AsyncSelfieTask(imageView, TARGET_HEIGHT, TARGET_WIDTH);
+        asyncSelfieTask.execute(uri);
+    }
+
 }
